@@ -1,0 +1,170 @@
+openapi: 3.0.3
+info:
+  title: REST API
+  version: 1.0.0
+servers:
+  - url: https://localhost:8080/{version}/
+    description: Local Server
+    variables:
+      version:
+        description: API version
+        default: v1
+
+paths:
+  /users/{user_id}:
+    parameters:
+      - in: path
+        name: id
+        description: ユーザID
+        required: true
+        schema: 
+          type: string
+    get:
+      tags:
+        - User
+      operationId: getUser
+      summary: Get user
+      description: 指定したIDのユーザ情報を取得します。
+      responses:
+        '200':
+          description: OK
+          content: 
+            application/json: 
+              schema: 
+                $ref: '#/components/schemas/Customer'
+        '404':
+          description: ErrRecordNotFound
+        '500':
+          description: サーバの内部エラー
+          content: 
+            application/json: 
+              schema: 
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags:
+        - User
+      summary: Delete User
+      responses:
+        '204':
+          description: OK
+        '404':
+          description: ErrRecordNotFound
+        '500':
+          description: サーバの内部エラー
+          content: 
+            application/json: 
+              schema: 
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags:
+        - User
+      summary: Update User
+      requestBody:
+        content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestBody'   
+      responses:
+        '200':
+          description: OK
+          content: 
+            application/json: 
+              schema: 
+                $ref: '#/components/schemas/Customer'
+        '404':
+          description: ErrRecordNotFound
+        '500':
+          description: サーバの内部エラー
+          content: 
+            application/json: 
+              schema: 
+                $ref: '#/components/schemas/ErrorResponse'
+  /users:
+    post:
+      tags:
+        - User
+      summary: Create User
+      requestBody:
+        content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestBody'   
+      responses:
+        '200':
+          description: OK
+          content: 
+            application/json: 
+              schema: 
+                $ref: '#/components/schemas/Customer'
+        '404':
+          description: ErrRecordNotFound
+        '500':
+          description: サーバの内部エラー
+          content: 
+            application/json: 
+              schema: 
+                $ref: '#/components/schemas/ErrorResponse'
+    get:
+      tags:
+        - User
+      summary: Get users
+      responses:
+        '200':
+          description: OK
+          content: 
+            application/json: 
+              schema: 
+                $ref: '#/components/schemas/Customer'
+        '404':
+          description: ErrRecordNotFound
+        '500':
+          description: サーバの内部エラー
+          content: 
+            application/json: 
+              schema: 
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    Customer:
+      title: ユーザ情報
+      description: ユーザ情報オブジェクト
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          description: ユーザID
+          type: string
+          example: 1
+        name:
+          description: 名前
+          type: string
+          example: koizumi
+        Email:
+          description: メールアドレス
+          type: string
+          example: koizumi@mail.cc
+    RequestBody:
+      title: 入力情報
+      description: 入力情報オブジェクト
+      type: object
+      required:
+        - name
+        - Email
+      properties:
+        name:
+          description: 名前
+          type: string
+          example: newName
+        Email:
+          description: メールアドレス
+          type: string
+          example: newEmail
+    ErrorResponse:
+      title: エラーレスポンス
+      type: object
+      properties:
+        message:
+          description: エラーメッセージ
+          type: string
+
