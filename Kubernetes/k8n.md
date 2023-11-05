@@ -48,41 +48,56 @@ Kubernetesをデプロイすると、クラスターが展開される。
 ### ノード(Node)
 
 - Podは常にノード上で動作し、ノードはKubernetesではワーカーマシンであり、クラスターによって仮想、物理マシンのどちらであってもかまわない。
-- 各ノードはマスターによって管理されます。
-- ノードは複数のPodを持つことができ、Kubernetesマスターはクラスター内のノード間でPodのスケジュールを自動的に処理します。マスターの自動スケジューリングは各ノードで利用可能なリソースを考慮に入れます。
+- 各ノードはマスターによって管理される。
+- ノードは複数のPodを持つことができ、Kubernetesマスターはクラスター内のノード間でPodのスケジュールを自動的に処理する。マスターの自動スケジューリングは各ノードで利用可能なリソースを考慮に入れる。
 
 
 ### サービス(Service)
 
 - アプリケーション(Deployment)を外部に公開するには Service を作成
-  - ClusterIP - クラスター内部のIPでServiceを公開します。クラスター内部からのみアクセス可能です。
-  - NodePort - NATを使用してServiceを公開します。クラスター外部からのアクセスが可能となります。
-  - LoadBalancer - ロードバランサでServiceを公開します。Minikubeではサポートされていません。
-  - ExternalName - FQDN と Kube-DNS を用いてServiceを公開します。
+  - ClusterIP - クラスター内部のIPでServiceを公開。クラスター内部からのみアクセス可能。
+  - NodePort - NATを使用してServiceを公開。クラスター外部からのアクセスが可能。
+  - LoadBalancer - ロードバランサでServiceを公開。Minikubeではサポートされていない。
+  - ExternalName - FQDN と Kube-DNS を用いてServiceを公開。
+
 
 ### ローリングアップデート
 
-- Kubernetes を用いると、サービスを停止することなく、複数台稼働している Pod をひとつずつアップデートしていくことができます
+- Kubernetes を用いると、サービスを停止することなく、複数台稼働している Pod をひとつずつアップデートしていくことができる
 
 
 ## よく利用するコマンド
-#### ログの確認
-- kubectl logs [pod名]
+#### NameSpace一覧を確認
+- kubectl get namespace
 
 #### pod一覧を確認
-- kubectl get pod (rs/deploy)
+- kubectl get pod -n [namespace名]
+
+#### ログの確認
+- kubectl logs -n [namespace名] [pod名] 
+- kubectl logs -n -f [namespace名] [pod名]  
+  - リアルタイムで確認
+
+#### svc(Service)一覧を確認
+- kubectl get svc -n [namespace名] [pod名] 
+
+#### podを削除
+- kubectl delete -n [namespace名] [pod名] 
+
+#### deployment一覧を確認
+- kubectl get deploy -n [namespace名]
+
+#### deploymentの編集
+- kubectl edit deploy -n [namespace名] [deployment名]
+
+#### ポートフォワーディング
+- kubectl port-forward n [namespace名] [pod名] 8080:8080
 
 #### rs(Replica Set)一覧を確認
 - kubectl get (rs/deploy)
 
-#### svc(Service)一覧を確認
-- kubectl get svc
-
-#### podを削除
-- kubectl delete pod [Pod名]
-
 #### pod/rc/rs/svcの詳細を確認する
-- kubectl describe [Pod名/rc名/rs名/svc名]
+- kubectl describe pods -n [namespace名] [pod名] 
 
 ####  Pod（コンテナ）上でコマンドを実行
 - kubectl exec [Pod名] [コマンド]
